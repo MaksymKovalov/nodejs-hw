@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { errors as celebrateErrors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
@@ -23,6 +24,9 @@ app.use(notesRoutes);
 
 // Middleware для обробки неіснуючих маршрутів (404)
 app.use(notFoundHandler);
+
+// Обробка помилок валідації celebrate
+app.use(celebrateErrors());
 
 // Middleware для обробки помилок (500)
 app.use(errorHandler);

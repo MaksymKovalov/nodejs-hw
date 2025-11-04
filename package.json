@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/MaksymKovalov/nodejs-hw#readme",
   "dependencies": {
+    "celebrate": "^15.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
