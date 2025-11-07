@@ -1,12 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import { errors as celebrateErrors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import notesRoutes from './routes/notesRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 // Завантаження змінних оточення
 dotenv.config();
@@ -18,8 +20,10 @@ const PORT = process.env.PORT || 3000;
 app.use(logger); // Логування HTTP-запитів
 app.use(cors()); // Дозволяє запити з інших доменів
 app.use(express.json()); // Обробка JSON у body запиту
+app.use(cookieParser()); // Обробка cookies
 
 // Маршрути
+app.use(authRoutes);
 app.use(notesRoutes);
 
 // Middleware для обробки неіснуючих маршрутів (404)
