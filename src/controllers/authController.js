@@ -57,6 +57,9 @@ export const loginUser = async (req, res, next) => {
       throw createHttpError(401, 'Invalid credentials');
     }
 
+    // Видаляємо існуючі сесії користувача
+    await Session.deleteMany({ userId: user._id });
+
     // Створюємо сесію
     const session = await createSession(user._id);
 
@@ -125,6 +128,9 @@ export const refreshUserSession = async (req, res, next) => {
     if (new Date() > session.refreshTokenValidUntil) {
       throw createHttpError(401, 'Refresh token expired');
     }
+
+    // Видаляємо стару сесію
+    await Session.findByIdAndDelete(sessionId);
 
     // Створюємо нову сесію
     const newSession = await createSession(session.userId);

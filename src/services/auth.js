@@ -14,9 +14,6 @@ export const createSession = async (userId) => {
   const accessTokenValidUntil = new Date(now.getTime() + FIFTEEN_MINUTES);
   const refreshTokenValidUntil = new Date(now.getTime() + ONE_DAY);
 
-  // Видаляємо старі сесії користувача
-  await Session.deleteMany({ userId });
-
   // Створюємо нову сесію
   const session = await Session.create({
     userId,
@@ -33,22 +30,22 @@ export const createSession = async (userId) => {
 export const setSessionCookies = (res, session) => {
   const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,
+    sameSite: 'none',
   };
 
   res.cookie('accessToken', session.accessToken, {
     ...cookieOptions,
-    expires: session.accessTokenValidUntil,
+    maxAge: FIFTEEN_MINUTES,
   });
 
   res.cookie('refreshToken', session.refreshToken, {
     ...cookieOptions,
-    expires: session.refreshTokenValidUntil,
+    maxAge: ONE_DAY,
   });
 
   res.cookie('sessionId', session._id.toString(), {
     ...cookieOptions,
-    expires: session.refreshTokenValidUntil,
+    maxAge: ONE_DAY,
   });
 };
