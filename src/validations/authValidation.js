@@ -1,0 +1,18 @@
+import { Joi, Segments } from 'celebrate';
+
+// Валідація для POST /auth/register
+export const registerUserSchema = {
+  [Segments.BODY]: Joi.object({
+    username: Joi.string().optional(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required(),
+  }),
+};
+
+// Валідація для POST /auth/login
+export const loginUserSchema = {
+  [Segments.BODY]: Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+};
