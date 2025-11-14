@@ -1,6 +1,9 @@
+// Завантаження змінних оточення - МАЄ БУТИ ПЕРШИМ
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { errors as celebrateErrors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
@@ -9,9 +12,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import notesRoutes from './routes/notesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-
-// Завантаження змінних оточення
-dotenv.config();
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use(cookieParser()); // Обробка cookies
 
 // Маршрути
 app.use(authRoutes);
+app.use(userRoutes);
 app.use(notesRoutes);
 
 // Middleware для обробки неіснуючих маршрутів (404)

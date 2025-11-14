@@ -16,3 +16,18 @@ export const loginUserSchema = {
     password: Joi.string().required(),
   }),
 };
+
+// Валідація для POST /auth/request-reset-email
+export const requestResetEmailSchema = {
+  [Segments.BODY]: Joi.object({
+    email: Joi.string().email().required(),
+  }),
+};
+
+// Валідація для POST /auth/reset-password
+export const resetPasswordSchema = {
+  [Segments.BODY]: Joi.object({
+    token: Joi.string().required(),
+    password: Joi.string().required(),
+  }),
+};
