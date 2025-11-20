@@ -24,10 +24,13 @@ export const registerUser = async (req, res, next) => {
       throw createHttpError(409, 'Email already in use');
     }
 
-    // Створюємо нового користувача (пароль буде хешовано в pre('save') hook)
+    // Хешуємо пароль
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Створюємо нового користувача
     const user = await User.create({
       email,
-      password,
+      password: hashedPassword,
       username,
     });
 
@@ -39,10 +42,6 @@ export const registerUser = async (req, res, next) => {
 
     res.status(201).json({
       user,
-      session: {
-        accessToken: session.accessToken,
-        refreshToken: session.refreshToken,
-      },
     });
   } catch (error) {
     next(error);
@@ -80,10 +79,6 @@ export const loginUser = async (req, res, next) => {
 
     res.status(200).json({
       user: userWithoutPassword,
-      session: {
-        accessToken: session.accessToken,
-        refreshToken: session.refreshToken,
-      },
     });
   } catch (error) {
     next(error);
@@ -148,10 +143,7 @@ export const refreshUserSession = async (req, res, next) => {
     setSessionCookies(res, newSession);
 
     res.status(200).json({
-      session: {
-        accessToken: newSession.accessToken,
-        refreshToken: newSession.refreshToken,
-      },
+      message: 'Session refreshed successfully',
     });
   } catch (error) {
     next(error);
@@ -204,6 +196,7 @@ export const requestResetEmail = async (req, res, next) => {
     // Надсилаємо email
     try {
       await sendEmail({
+        from: process.env.SMTP_FROM,
         to: email,
         subject: 'Скидання паролю',
         html,
