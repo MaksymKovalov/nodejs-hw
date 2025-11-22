@@ -21,7 +21,7 @@ export const registerUser = async (req, res, next) => {
     // Перевіряємо, чи користувач вже існує
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      throw createHttpError(409, 'Email already in use');
+      throw createHttpError(400, 'Email already in use');
     }
 
     // Хешуємо пароль
